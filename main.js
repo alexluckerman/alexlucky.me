@@ -8,7 +8,6 @@ var apiLink = "https://api.groupme.com/v3/groups";
 var quote, author, poster, reveal;
 function init() {
     if (accessToken == null) {
-        window.alert("The app is not authorized! Click the authorization link");
         window.location = "https://oauth.groupme.com/oauth/authorize?client_id=ZDxIRTOlmsiv6iOwlmLextWonlTK5vGqB6rWI8J2dnJfkiRB";
 }
 else {
@@ -16,40 +15,19 @@ else {
    author = document.getElementById("author");
    poster = document.getElementById("poster");
    reveal = document.getElementById("reveal");
-   pickGroup();
    loadAllQuotes();
 
 }  
 } 
 
-
 function revealAnswer() {
     reveal.style.display = "inline";
 }
 
-function pickGroup() {
-                var quoteRequest = new XMLHttpRequest();
-                quoteRequest.open("GET", apiLink+accessToken, false);
-            
-                quoteRequest.send();                  
-                var resp = quoteRequest.response;
-                groupInfo = JSON.parse(resp);
-                var response = groupInfo.response;
-                
-                for(var i = 0; i < response.length; i++) {
-                    quote.innerHTML += response[i].name + "</br>";
-                    if (response[i].name == "Quote Book") {
-                        groupId = response[i].id;
-                        groupName = response[i].name;
-                    }
-                }
-            }
-
-
 var quoteBook = [];
 var numBooks = 1;
 function loadAllQuotes() {
-    // request a new batch of 100 messages from selected group
+    // request a new batch of 20 messages from selected group
     // add them to the quotebook
     // while message count > 0, continue
     var cont = true;
@@ -81,7 +59,6 @@ function loadAllQuotes() {
     }
     console.log("All quotes loaded");
 }
-
 
 function newQuote() {
     var randBookNum = Math.floor(Math.random()*quoteBook.length);
