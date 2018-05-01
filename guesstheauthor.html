@@ -22,7 +22,7 @@
             
             
             function getQuote() {
-                XMLHttpRequest quoteRequest = new XMLHttpRequest();
+                var quoteRequest = new XMLHttpRequest();
                 quoteRequest.open("GET", apiLink+auth, false);
             
                 quoteRequest.send();                  
@@ -35,7 +35,7 @@
     <body>
         <a id="auth" href="https://oauth.groupme.com/oauth/authorize?client_id=ZDxIRTOlmsiv6iOwlmLextWonlTK5vGqB6rWI8J2dnJfkiRB">Authorize</a>
         <p id="quote"></p>
-        <p id="revealButton">Reveal</p>
+        <p id="revealButton" onclick="getQuote()">Reveal</p>
         <p id="nextButton">Next quote</p>
         <p id="author"></p>
         <img src="groupme.jpg"/>
