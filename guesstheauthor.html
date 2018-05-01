@@ -9,18 +9,26 @@
             if (accessToken == "") {
                 window.alert("The app is not authorized! Click the authorization link");
             }
+            else {
+                getQuote();
+            }
             
             
             var quote = document.getElementById("quote");
             var authLink = document.getElementById("auth");
             
-            XMLHttpRequest getQuotes = new XMLHttpRequest();
+            
             var apiLink = "https://api.groupme.com/v3/groups?token=";
             
             
-            function getQuote()
+            function getQuote() {
+                XMLHttpRequest quoteRequest = new XMLHttpRequest();
+                quoteRequest.open("GET", apiLink+auth, false);
             
-            
+                quoteRequest.send();                  
+                var resp = quote.responseText();                  
+                quote.innerHTML = resp;
+            }
             var groupId = "";
         </script>
     </head>
