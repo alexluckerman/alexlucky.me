@@ -1,5 +1,6 @@
 var groupInfo;
-var groupId, groupName;
+var groupId = 36691870,
+    groupName;
             
 var url = new URL(window.location);
 var params = url.searchParams;
