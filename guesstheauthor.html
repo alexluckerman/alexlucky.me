@@ -2,42 +2,15 @@
 <html>
     <head>
         <title>Guess that quote!</title>
-        <script>
-            var url = new URL(window.location.href);
-            var params = url.searchParams;
-            var accessToken = params.get("access_token");
-            if (accessToken == "") {
-                window.alert("The app is not authorized! Click the authorization link");
-            }
-            else {
-                getQuote();
-            }
-            
-            
-            var quote = document.getElementById("quote");
-            var authLink = document.getElementById("auth");
-            
-            
-            var apiLink = "https://api.groupme.com/v3/groups?token=";
-            
-            
-            function getQuote() {
-                var quoteRequest = new XMLHttpRequest();
-                quoteRequest.open("GET", apiLink+auth, false);
-            
-                quoteRequest.send();                  
-                var resp = quote.responseText();                  
-                quote.innerHTML = resp;
-            }
-            var groupId = "";
-        </script>
+        <script src="main.js"></script>
     </head>
-    <body>
-        <a id="auth" href="https://oauth.groupme.com/oauth/authorize?client_id=ZDxIRTOlmsiv6iOwlmLextWonlTK5vGqB6rWI8J2dnJfkiRB">Authorize</a>
+    <body onload="init()">
         <p id="quote"></p>
-        <p id="revealButton" onclick="getQuote()">Reveal</p>
-        <p id="nextButton">Next quote</p>
-        <p id="author"></p>
-        <img src="groupme.jpg"/>
+        <p id="reveal" style="display: none">Quote by: <span id="author"></span>, posted by <span id="poster"></span></p>
+    </br>
+        <p onclick="revealAnswer()">Reveal</p>
+        <p onclick="newQuote()">Next quote</p>
+        
+        <!--<img src="groupme.jpg"/>-->
     </body>
 </html>
