@@ -1,0 +1,27 @@
+body {
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+  
+#quote {
+  font-size:200%;
+}
+
+#loading {
+   font-size:300%;
+}
+
+span {
+  font-weight: bold;
+}
+
+#reveal #altReveal #app {
+  display: none;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}

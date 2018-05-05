@@ -3,14 +3,30 @@
     <head>
         <title>Guess that quote!</title>
         <script src="main.js"></script>
+        <link rel="stylesheet" href="main.css">
     </head>
     <body onload="init()">
-        <p id="quote"></p>
-        <p id="reveal" style="display: none">Quote by: <span id="author"></span>, posted by <span id="poster"></span></p>
-    </br>
-        <p onclick="revealAnswer()">Reveal</p>
-        <p onclick="newQuote()">Next quote</p>
-        
-        <!--<img src="groupme.jpg"/>-->
+        <div id="loading"><p>Loading...</p></div>
+        <div id="app" style="display: none;">
+            <p id="quote"></p>
+          <div class="details">
+            <div id="reveal">
+            <p>Quote by <span id="author"></span></p>
+            <p>Posted by <span id="poster"></span> on <span id="time"></span></p>
+            <p>Received <span id="likes"></span> likes</p></div>
+            <div id="altReveal">
+            <p>Posted by <span id="altPoster"></span> on <span id="altTime"></span></p>
+            <p>Received <span id="altLikes"></span> likes</p>
+            </div>
+          </div>
+          <div class="controls">
+            <button onclick="revealAnswer()">Reveal</button>
+            <button onclick="newQuote()">Next quote</button>
+            <button onclick="showFullMessage()">Show original message</button>
+          </div>
+          <p id="fullmsg"></p>
+          <!--<img src="groupme.jpg"/>-->
+          <footer><p>Keyboard shortcuts: Reveal quote (r), Next quote (n), Show original message (o)</p></footer>
+          </div>
     </body>
 </html>
