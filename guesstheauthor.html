@@ -2,31 +2,52 @@
 <html>
     <head>
         <title>Guess that quote!</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <script src="main.js"></script>
         <link rel="stylesheet" href="main.css">
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-41544053-2"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+        
+          gtag('config', 'UA-41544053-2');
+        </script>
     </head>
     <body onload="init()">
-        <div id="loading"><p>Loading...</p></div>
+        <div id="loading">
+            <p>Loading...</p>
+            <progress max="100" value="0"></progress>
+        </div>
         <div id="app" style="display: none;">
+            <header>
+                <h1>Guess that quote!</h1>
+            </header>
+            <hr/>
             <p id="quote"></p>
+            <hr/>
           <div class="details">
             <div id="reveal">
             <p>Quote by <span id="author"></span></p>
             <p>Posted by <span id="poster"></span> on <span id="time"></span></p>
-            <p>Received <span id="likes"></span> likes</p></div>
-            <div id="altReveal">
+            <p>Received <span id="likes"></span> likes. <span id="liked"></span></p></div>
+            <!--<div id="altReveal">
             <p>Posted by <span id="altPoster"></span> on <span id="altTime"></span></p>
             <p>Received <span id="altLikes"></span> likes</p>
-            </div>
+            </div>-->
           </div>
           <div class="controls">
             <button onclick="revealAnswer()">Reveal</button>
             <button onclick="newQuote()">Next quote</button>
-            <button onclick="showFullMessage()">Show original message</button>
+            <!--<button onclick="toggleLike()" id="likeButton"></button>
+            <!--<button onclick="showFullMessage()">Show original message</button>-->
           </div>
-          <p id="fullmsg"></p>
-          <!--<img src="groupme.jpg"/>-->
-          <footer><p>Keyboard shortcuts: Reveal quote (r), Next quote (n), Show original message (o)</p></footer>
+          <!--<p id="fullmsg"></p>
+          <img src="groupme.jpg" alt="Powered by GroupMe"/>-->
+          <footer>
+              <p>Copyright 2018 Alex Luckerman. Powered by <a href="https://groupme.com/">GroupMe</a></p>
+              <p>Keyboard shortcuts: Reveal quote (r), Next quote (n)<!--, Show original message (o)--></p></footer>
           </div>
     </body>
 </html>
