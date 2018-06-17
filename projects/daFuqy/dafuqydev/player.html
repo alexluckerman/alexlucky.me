@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <title>da fuqy - player</title>
+    <style>
+        body {
+            background-color: 000000;
+            margin-right: 0px;
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+        #-player {
+            position: absolute;
+            background-color: ffffff;
+        }
+        #-duq {
+            position: absolute;
+            display: none;
+        }
+        #-in {
+            background-color: ffffff;
+        }
+    </style>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="player.js"></script>
+    <script>Player.start();
+	
+	</script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+</head>
+
+<body>
+    <div id="-player">
+        <img id="-duq" src="dafuqy.png" />
+    </div>
+    <div id="-in">
+        <input id="-script" />
+        <span onclick="Player.load()">Open script</span>
+        <input id="-img" />
+        <span onclick="$('#-duq').attr('src', $('#-img').val())">Load image</span>
+        <!--<span onclick="console.log(typeof $('#-script').val())">Debug</span>-->
+    </div>
+</body>
+
+</html>

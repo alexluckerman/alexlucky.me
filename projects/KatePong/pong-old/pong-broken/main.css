@@ -1,0 +1,46 @@
+body {
+margin:0px;
+background-color:#000000;
+font-family:"Trebuchet MS",sans-serif;
+color:#ffffff;
+font-size:16px;
+}
+h4{
+font-size:24px;
+}
+#title {
+font-size:56px;
+text-align:center;
+}
+.click {
+-webkit-user-select: none;
+position:fixed;
+visiblity:hidden;
+}
+.pong {
+background-color:#ffffff;
+position:fixed;
+}
+#pong1 {
+top:5px;
+}
+#pong2 {
+bottom:5px;
+}
+#ball {
+display:none;
+position:fixed;
+}
+a:link{
+font-family:"Trebuchet MS",sans-serif;
+color:red;
+text-align:center;
+}
+a:visited{
+font-family:"Trebuchet MS",sans-serif;
+color:red;
+text-align:center;
+}
+#playnow {
+font-size:72px;
+}

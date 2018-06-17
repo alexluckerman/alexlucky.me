@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html manifest="pong.manifest">
+<head>
+<title>KatePong</title>
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+<meta name="viewport" content="width=device-width" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<script type="text/javascript" src="main.js"></script>
+<link rel="stylesheet" type="text/css" href="main.css" />
+<link rel="shortcut icon" href="facepong.ico" />
+<link rel="apple-touch-icon" href="facepong.png" />
+<link rel="apple-touch-startup-image" href="startup.png">
+</head>
+<body onload="init();">
+<div id="topleft" class="click" onmousedown="cpos2 = cpos2 - pongm;pong1.style.left = cpos2 + 'px';"></div>
+<div id="topright" class="click" onmousedown="cpos2 = cpos2 + pongm;pong1.style.left = cpos2 + 'px';"></div>
+<div id="bottomleft" class="click" onmousedown="cpos1 = cpos1 - pongm;pong2.style.left = cpos1 + 'px';"></div>
+<div id="bottomright" class="click" onmousedown="cpos1 = cpos1 + pongm;pong2.style.left = cpos1 + 'px';"></div>
+<img id="ball" src="ball.png"/>
+<div id="pong1" class="pong"></div>
+<div id="pong2" class="pong"></div>
+<script>
+document.onkeyup=keyCheck;
+</script>
+</body>
+</html>
+
+

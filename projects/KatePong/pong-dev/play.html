@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>KatePong</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="shortcut icon" href="facepong.ico" />
+<link rel="apple-touch-icon" href="facepong.png" />
+<link rel="apple-touch-startup-image" href="startup.png">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script>
+// Definitions
+//var h, w, pongw, pongh, pongl, ballw, ballt, balll, bspeed, redge, rpedge, wtop, wbottom, psect, pleftb, pleftt, pmiddleb, pmiddlet, prightb, prightt, topleft, topright, bottomleft, bottomright, pong1, pong2, ball, cpos1, cpos2, bposl, bpost, dir;
+	$(function() {
+// Initializer
+h = window.innerHeight;
+w = window.innerWidth;
+clickw = Math.round(w / 2);
+clickh = Math.round(h / 2);
+pongw = Math.round(w / 15 * 3);
+pongh = Math.round(h * 0.033);
+pongl = Math.round(w / 2 - (pongw / 2));
+pongm = Math.round((w - pongw) / 12);
+ballw = Math.round(w * 0.066);
+ballt = Math.round(h / 2 - (ballw / 2));
+balll = Math.round(w / 2 - (ballw / 2));
+bspeed = Math.round(8000 / h);
+redge = w - ballw;
+rpedge = w - pongw;
+wtop = pongh + 5;
+wbottom = h - pongh - ballw - 5;
+psect = pongw / 3;
+pleftb = (-1 * psect) + 1;
+pleftt = psect - 1;
+pmiddleb = (-1 * psect) + psect + 1;
+pmiddlet = (2 * psect) - 1;
+prightb =(-1 * psect) + (2 * psect) + 1;
+prightt = (3 * psect) - 1; 
+click = $(".click");		
+topleft = $("#topleft");
+topright = $("#topright");
+bottomleft = $("#bottomleft");
+bottomright = $("#bottomright");
+pong = $(".pong");
+pong1 = $("#pong1");
+pong2 = $("#pong2");
+ball = $("#ball");
+cpos1 = pongl;
+cpos2 = pongl;
+bposl = balll;
+bpost = ballt;
+dir = 5;
+// Screen rendering engine
+click.css({ width: clickw + "px", height: clickh + "px"});
+topleft.css({top: "0px", left: "0px"});
+topright.css({top: "0px", left: clickw + "px"});
+bottomleft.css({top: clickh + "px", left: "0px"});
+bottomright.css({top: clickh + "px", left: clickw + "px"});
+pong.css({ width: pongw + "px", height: pongh + "px", left: pongl + "px" });
+ball.css({ width: ballw + "px", height: ballw + "px", left: balll + "px", top: ballt + "px" });
+setInterval(moveBall,bspeed);
+//Bind touch or mouse events
+if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+topleft.on("touchstart", function() {cpos2 = cpos2 - pongm;pong1.css("left", cpos2 + 'px');});
+topright.on("touchstart", function() {cpos2 = cpos2 + pongm;pong1.css("left", cpos2 + 'px');});
+bottomleft.on("touchstart", function() {cpos1 = cpos1 - pongm;pong2.css("left", cpos1 + 'px');});
+bottomright.on("touchstart", function() {cpos1 = cpos1 + pongm;pong2.css("left", cpos1 + 'px');});	
+}
+else {
+topleft.on("click", function() {cpos2 = cpos2 - pongm;pong1.css("left", cpos2 + 'px');});
+topright.on("click", function() {cpos2 = cpos2 + pongm;pong1.css("left", cpos2 + 'px');});
+bottomleft.on("click", function() {cpos1 = cpos1 - pongm;pong2.css("left", cpos1 + 'px');});
+bottomright.on("click", function() {cpos1 = cpos1 + pongm;pong2.css("left", cpos1 + 'px');});	
+}
+//setInterval(renderCalc,200);
+});
+// Key input tracker
+function keyCheck(k) {
+var obj = window.event ? event : k;
+var key = obj.keyCode;
+if (key==37 && cpos1 > 0) {
+cpos1 = cpos1 - pongm;
+}
+if(key==39 && cpos1 < rpedge) {
+cpos1 = cpos1 + pongm;
+}
+if (key==65 && cpos2 > 0) {
+cpos2 = cpos2 - pongm;
+}
+if(key==68 && cpos2 < rpedge) {
+cpos2 = cpos2 + pongm;
+}
+pong2.css("left", cpos1 + "px");
+pong1.css("left", cpos2 + "px");
+}
+// Ball movement engine
+function moveBall() {
+switch(dir)
+{
+case 1:
+bpost = bpost - 1;
+break;
+case 2:
+bpost = bpost - 1;
+bposl = bposl + 1;
+break;
+case 3:
+bposl = bposl + 1;
+break;
+case 4:
+bpost = bpost + 1;
+bposl = bposl + 1;
+break;
+case 5:
+bpost = bpost + 1;
+break;
+case 6:
+bpost = bpost + 1;
+bposl = bposl - 1;
+break;
+case 7:
+bposl = bposl - 1;
+break;
+case 8:
+bpost = bpost - 1;
+bposl = bposl - 1;
+break;
+}
+// Ball repainting engine
+ball.css("top", bpost + "px");
+ball.css("left", bposl + "px");
+// Ball collision detection engine
+if (bposl == redge)
+{
+colDetect("r");
+}
+if (bposl === 0)
+{
+colDetect("l");
+}
+if (bpost == h - ballw)
+{
+alert("Player 2 won!");
+location.reload();
+}
+if (bpost === 0)
+{
+alert("Player 1 won!");
+location.reload();
+}
+if (bpost == wbottom && bposl >= cpos1 + pleftb && bposl <= cpos1 + pleftt)
+{
+colDetect("bl");
+}
+if (bpost == wbottom && bposl >= cpos1 + pmiddleb && bposl <= cpos1 + pmiddlet)
+{
+colDetect("bm");
+}
+if (bpost == wbottom && bposl >= cpos1 + prightb && bposl <= cpos1 + prightt)
+{
+colDetect("br");
+}
+if (bpost == wtop && bposl >= cpos2 + pleftb && bposl <= cpos2 + pleftt)
+{
+colDetect("tl");
+}
+if (bpost == wtop && bposl >= cpos2 + pmiddleb && bposl <= cpos2 + pmiddlet)
+{
+colDetect("tm");
+}
+if (bpost == wtop && bposl >= cpos2 + prightb && bposl <= cpos2 + prightt)
+{
+colDetect("tr");
+}
+}
+// Ball collision handler
+function colDetect(h){
+switch(h){
+case "r":
+if (dir == 2) {
+dir = 8;
+}
+if (dir == 4) {
+dir = 6;
+}
+break;
+case "l":
+if (dir == 8) {
+dir = 2;
+}
+if (dir == 6) {
+dir = 4;
+}
+break;
+case "bl":
+if (dir == 4) {
+dir = 6; 
+}
+if (dir == 5) {
+dir = 8;
+}
+if (dir == 6) {
+dir = 8;
+}
+break;
+case "bm":
+if (dir == 6) {
+dir = 8; 
+}
+if (dir == 5) {
+dir = 1;
+}
+if (dir == 4) {
+dir = 2;
+}
+break;
+case "br":
+if (dir == 4) {
+dir = 2; 
+}
+if (dir == 5) {
+dir = 2;
+}
+if (dir == 6) {
+dir = 8;
+}
+break;
+case "tl":
+if (dir == 2) {
+dir = 4; 
+}
+if (dir == 1) {
+dir = 6;
+}
+if (dir == 8) {
+dir = 6;
+}
+break;
+case "tm":
+if (dir == 2) {
+dir = 4;
+}
+if (dir == 1) {
+dir = 5;
+}
+if (dir == 8) {
+dir = 6;
+}
+break;
+case "tr":
+if (dir == 2) {
+dir = 4; 
+}
+if (dir == 1) {
+dir = 4;
+}
+if (dir == 8) {
+dir = 6;
+}
+break;
+}
+}
+</script>
+<style>
+body {
+margin:0px;
+background-color:#000000;
+}
+.pong {
+background-color:#ffffff;
+position:fixed;
+}
+#pong1 {
+top:5px;
+}
+#pong2 {
+bottom:5px;
+}
+#ball {
+position:fixed;
+}
+.click {
+position:absolute;	
+}
+</style>
+</head>
+<body>
+<div id="topleft" class="click"></div>
+<div id="topright" class="click"></div>
+<div id="bottomleft" class="click"></div>
+<div id="bottomright" class="click"></div>
+<img id="ball" src="ball.png"/>
+<div id="pong1" class="pong"></div>
+<div id="pong2" class="pong"></div>
+<script>
+document.onkeydown=keyCheck;
+</script>
+</body>
+</html>

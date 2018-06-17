@@ -1,0 +1,114 @@
+<html>
+  <head>
+    <title>it's a cat... that teleports. teleportcat?</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+      var score;
+      var active;
+      $(document).ready(function() {
+        cat = $('#catimg');
+        sb = $('#scorebox');
+        tb = $('#timebox');
+        spd = $('#speed');
+        st = $('#start');
+        pt = $('#pausetoggle');
+        ss = $('#settings');
+        stog = $('#settoggle');
+        cat.on('mousedown', scoreUp);
+        st.click(start);
+        pt.click(pauseToggle);
+        stog.click(settingsToggle);
+        spd.change(changeSpeed);
+	setshow = false;
+	gameover = true;
+      });
+      function scoreUp() {
+        if(active) { 
+	  score++;
+          sb.text(score); 
+	}
+      }
+      function moveCat() {
+        var h = window.innerHeight;
+        var w = window.innerWidth;
+        var newh = Math.random() * h - catimg.height;
+        var neww = Math.random() * w - catimg.width;
+        cat.css('top', newh + 'px');
+        cat.css('left', neww + 'px');
+      }
+      function scale() {
+         
+      }
+      function changeSpeed() {
+        clearInterval(mc);
+        var mcspd = parseInt(spd.val()) * 100;
+        mc = setInterval(moveCat, mcspd);
+      }
+      function timing() {
+        if(time == 0) {
+          clearInterval(mc);
+          clearInterval(timer);
+        }
+	else {
+        time--;
+        tb.text(time);
+	}
+      }
+      function start() { 
+	if(gameover) {
+          score = 0;
+          mc = setInterval(moveCat, parseInt(spd.val()) * 100);
+          time = 30;
+          timer = setInterval(timing, 1000);
+	  active = true;
+	}	
+      }
+      function pauseToggle() {
+       if(active) {
+	clearInterval(timer);
+        clearInterval(mc);
+	pt.text('unpause');
+	active = false;
+      }
+       else {
+        mc = setInterval(moveCat, parseInt(spd.val()) * 100);
+        timer = setInterval(timing, 1000);
+	pt.text('pause');
+	active = true;
+      }
+      }
+      function settingsToggle() {
+	if(!setshow) {
+	  ss.css('display', 'block');
+	  stog.text('hide settings');
+	  setshow = true;
+	}
+	else {
+	  ss.css('display', 'none');
+	  stog.text('show settings');
+	  setshow = false;
+	}
+      }
+    </script>
+    <style>
+      #catimg {
+        position: absolute;
+        left: 20%;
+      }
+      #settings {
+        display: none;
+      }
+    </style>  
+  </head>
+  <body>
+    <img src='cat.jpg' id='catimg'/>
+    <p>score <span id='scorebox'>0</span></p>
+    <p>time <span id='timebox'>30</span></p>
+    <span id='start'>start game</span>
+    <span id='pausetoggle'>pause</span>
+    <span id='settoggle'>settings</span>
+    <div id='settings'>
+      <p>speed<input type='range' id='speed' min='1' max='12' value='9'/></p>
+    </div>
+  </body>
+</html>

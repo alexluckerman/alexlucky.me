@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+	<head>
+		<title>tonyslist</title>
+		<style>
+			html {
+				margin: 0;
+				border: 0;
+				padding: 0;
+			}
+			@keyframes first
+				{
+					from {color: white;}
+					to {color: yellow;}
+				}
+			@-webkit-keyframes first
+				{
+					from {color: white;}
+					to {color: yellow;}
+			}
+			@keyframes fadein
+				{
+					from {opacity: 0;}
+					to {opacity: 100;}
+				}
+
+			@-webkit-keyframes fadein
+				{
+					from {opacity: 0;}
+					to {opacity: 100;}
+				}
+			@keyframes flip
+				{
+					0%   {rotateY(0deg);}
+					25%  {rotateY(90deg);}
+					50%  {rotateY(180deg);}
+					75%  {rotateY(270deg);}
+					100% {rotateY(360deg);}
+				}
+			@-webkit-keyframes flip
+				{
+					0%   {-webkit-transform:rotateY(0deg);}
+					25%  {-webkit-transform:rotateY(90deg);}
+					50%  {-webkit-transform:rotateY(180deg);}
+					75%  {-webkit-transform:rotateY(270deg);}
+					100% {-webkit-transform:rotateY(360deg);}
+			}
+			body {
+				background: black;
+				color: white;
+				text-align: center;
+				font-family: sans-serif;
+				font-style: italic;
+				font-size: 2em;
+			}
+			input {
+				border: 0;
+				padding: 0.5em;
+				animation: fadein 5s;
+				-webkit-animation: fadein 5s;
+			}
+			input[type='submit'] {
+				background: limegreen;
+			}
+			#mousie {
+				position: absolute;
+			}
+			div {
+				text-align: left;
+				font-size: 0.5em;
+				font-style: normal;
+			}
+			a {
+				font-style:italic;
+				animation: first 6s;
+				-webkit-animation: first 6s;
+				color: yellow;
+			}
+			a:hover{
+				color: yellow;
+				transform: rotateY(130deg);
+				-webkit-transform:rotateY(130deg);
+				/* animation: flip 5s;
+				-webkit-animation: flip 5s; */
+			}
+		</style>
+	</head>
+	<body>
+		<p><a href='#'>tonyslist</a></p>
+		<input type='search' id='search' placeholder="what do you want to buy?" onkeypress='enterSearch()'>
+		<input type='submit' value="find" onclick='loadResults()'>
+		<div>
+			<center><p id='results'></p></center>
+			<img src='http://img3.wikia.nocookie.net/__cb20120522000532/animalcrossing/images/b/b7/Mouse.jpg' height='40px' width='40px' id='mousie'>
+		</div>
+		<script>
+			var results = document.getElementById('results');
+			var search = document.getElementById('search');
+			var rainbows;
+			function loadResults() {
+				if (search.value == "rainbows") {
+					rainbows = window.setInterval(function(){rainbow()}, 100);
+					results.innerHTML = "YAY RAINBOWS!!!!!!!";
+				}
+				else {
+					results.innerHTML = "No results found :(";
+					if(rainbows != undefined) {clearInterval(rainbows);}
+					document.body.style.backgroundColor = "black";
+				}
+			}
+			function rainbow() {
+				var r = Math.round(Math.random()*255);
+				var g = Math.round(Math.random()*255);
+				var b = Math.round(Math.random()*255);
+				var tr = 255 - r;
+				var tg = 255 - g;
+				var tb = 255 - b;
+				document.body.style.backgroundColor = "rgb(" + r + "," + g + "," + b + ")";
+			}
+			function enterSearch(e) {
+				e = e || event
+				if (e.keyCode == 13) {
+					loadResults();
+				}
+			}
+			document.getElementById('mousie').onkeydown = function(e) {
+ 				e = e || event
+				console.log('press');
+ 				switch(e.keyCode) {
+ 					case 37: // left
+    					this.style.left = parseInt(this.style.left)-this.offsetWidth+'px'
+    					return false;
+  					case 38: // up
+    					this.style.top = parseInt(this.style.top)-this.offsetHeight+'px'
+    					return false;
+ 					case 39: // right
+    					this.style.left = parseInt(this.style.left)+this.offsetWidth+'px'
+    					return false;
+ 	 				case 40: // down
+    					this.style.top = parseInt(this.style.top)+this.offsetHeight+'px'
+  			  			return false;
+  				}
+			}
+ 		</script>
+	</body>
+</html>

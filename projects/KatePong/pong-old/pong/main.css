@@ -1,0 +1,39 @@
+body {
+background-color:#000000;
+}
+#title {
+font-family:"Trebuchet MS",sans-serif;
+font-size:72px;
+color:#ffffff;
+text-align:center;
+}
+.pong {
+background-color:#ffffff;
+width:120px;
+height:20px;
+position:fixed;
+left:240px;
+}
+#pong1 {
+top:5px;
+}
+#pong2 {
+bottom:5px;
+}
+#ball {
+position:fixed;
+top:279px;
+left:280px;
+}
+a:link{
+font-size:72px;
+font-family:"Trebuchet MS";
+color:red;
+text-align:center;
+}
+a:visited{
+font-size:72px;
+font-family:"Trebuchet MS";
+color:red;
+text-align:center;
+}

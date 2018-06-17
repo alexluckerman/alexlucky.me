@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <body onload='init()'>
+	<canvas width=440 height=440 id='canvas'></canvas>
+	<script>
+		var canvas,c,gameStatus,score,bestScore,playerX,playerY,numEnemies,upKey,downKey,leftKey,rightKey;
+    var xPos = new Array();
+	  var yPos = new Array();
+	  var xSpd = new Array();
+	  var ySpd = new Array();
+		function init() {
+      console.log('init');
+			canvas = document.getElementById('canvas');
+			c = canvas.getContext('2d');
+      document.body.onmousedown = mousePressed;
+      document.body.onmouseup = mouseReleased;
+      start();
+		}
+		function start() {
+      console.log('start');
+			gameStatus = 0;
+			score = 0;
+			if (localStorage.bestScore) {bestScore = localStorage.bestScore} else {bestScore = 0}
+			upKey, downKey, leftKey, rightKey = false;
+			numEnemies = 0;
+			playerX = 190;
+      playerY = 190;
+			active = setInterval('run()', 10);
+		}
+		function run() {
+      if (gameStatus == 1) {
+			if(upKey) {
+				playerY--;
+				if(playerY<20){playerY=20}
+			}
+			else if(downKey) {
+				playerY++;
+				if (playerY>400){playerY=400}
+			}
+			if(leftKey) {
+				playerX--; if(playerX<20){playerX=20}
+			}
+			else if(rightKey) {
+				playerX++;
+				if (playerX>400){playerX=400}
+			}
+			
+      if((score%381==0)&&(numEnemies<50)) {
+  			if(Math.round(Math.random()*2)==0) {
+					xPos[numEnemies] = -10+Math.round(Math.random()*2)*440;
+					yPos[numEnemies] = playerY+5;
+					xSpd[numEnemies] = 1;
+					ySpd[numEnemies] = 0;
+				} else {
+					xPos[numEnemies] = playerX+5;
+					yPos[numEnemies] = -10+Math.round(Math.random()*2)*440;
+					xSpd[numEnemies] = 0;
+					ySpd[numEnemies] = 1;
+				}
+				numEnemies++;
+			}
+			
+			//move enemies
+			for(i=0;i<numEnemies;i++) {
+				if(xPos[i]<20)
+					xSpd[i] = 1;
+				else if(xPos[i]>410)
+					xSpd[i] = -1;
+				if(yPos[i]<20)
+					ySpd[i] = 1;
+				else if(yPos[i]>410)
+					ySpd[i] = -1;
+				xPos[i] += xSpd[i];
+				yPos[i] += ySpd[i];
+				if(-20<(playerX-xPos[i])&&(playerX-xPos[i])<10&&
+				-20<(playerY-yPos[i])&&(playerY-yPos[i]<10)) {gameStatus = 0;}
+			}
+			
+			score++;}      paint();
+		}
+	function mousePressed(e) {
+				console.log('mouse press');
+		        var x;
+                var y;
+                if (event.pageX || event.pageY) { 
+                    x = event.pageX;
+                    y = event.pageY;
+                }
+		if(gameStatus==0) {
+			if(x >= 370 && x <= 395 && y >= 370 && y <= 395) {
+				if(score>bestScore)
+					bestScore = score;
+				score = 0;
+				playerX = 190;
+        playerY = 190;
+				numEnemies = 0;
+				gameStatus = 1;
+			}
+			return;
+		}                
+                if (x >= 370 && x <= 395 && y >= 345 && y <= 370) {downKey = false; upKey = true; console.log('up')}
+                if (x >= 370 && x <= 395 && y >= 395 && y <= 420) {upKey = false; downKey = true;console.log('down')}
+                if (x >= 345 && x <= 370 && y >= 370 && y <= 395) {rightKey = false; leftKey = true;console.log('left')}
+                if (x >= 395 && x <= 420 && y >= 370 && y <= 395) {leftKey = false; rightKey = true;console.log('right')}
+                }
+	function mouseReleased(e) {
+		        /*var x;
+                var y;
+                if (event.pageX || event.pageY) { 
+                    x = event.pageX;
+                    y = event.pageY;
+                }
+                if (x >= 370 && x <= 395 && y >= 345 && y <= 370) {upKey = false;console.log('up release');}
+                if (x >= 370 && x <= 395 && y >= 345 && y <= 370) {downKey = false;console.log('down release');}
+                if (x >= 345 && x <= 370 && y >= 370 && y <= 395) {leftKey = false;console.log('left release');}
+                if (x >= 395 && x <= 420 && y >= 370 && y <= 395) {rightKey = false;console.log('right release');}*/
+                downKey = false;
+                upKey = false;
+                leftKey = false;
+                rightKey = false;
+	}
+	function paint() {
+    c.fillStyle = 'yellow';
+    c.fillRect(0, 0, 440, 440);
+		c.fillStyle = 'white';
+		c.fillRect(20,20,400,400);
+					c.fillStyle = 'orange';
+	c.fillRect(370, 345, 25, 25);
+	c.fillRect(370, 395, 25, 25);
+	c.fillRect(345, 370, 25, 25);
+	c.fillRect(395, 370, 25, 25);
+	c.fillStyle = 'black';
+	c.fillRect(370, 370, 25, 25);
+		if(gameStatus==1){c.fillStyle = 'blue';c.fillRect(playerX, playerY, 20, 20);}
+		c.fillStyle = 'red';
+		for(f=0;f<numEnemies;f++)
+			c.fillRect(xPos[f], yPos[f], 10, 10);
+		c.fillStyle = 'black';
+		c.fillText('Score: '+score, 5, 15);
+		c.fillText('Best Score: '+bestScore, 5, 435);
+		if(gameStatus==0) {
+			c.fillStyle = 'black';
+			c.fillText('PRESS THE BLACK BUTTON TO START A NEW GAME!', 80, 330);
+		}
+
+
+	}
+	</script></body>
+</html>

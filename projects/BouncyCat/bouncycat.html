@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<!--html manifest="bouncycat.manifest">-->
+<html>
+    <head>
+		<title>BouncyCat v3.1</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta name="application-name" content="BouncyCat"/> 
+		<meta name="msapplication-TileColor" content="#b0c4de"/> 
+		<meta name="msapplication-TileImage" content="9b67eb89-d874-440f-9665-af865468a787.png"/>
+		<link rel="shortcut icon" href="bouncycat1.ico" />
+		<link rel="apple-touch-icon" href="bouncycat.png" />
+		<link rel="apple-touch-startup-image" href="startup.png" />
+		<style type="text/css">
+			#-body {overflow:hidden;background-color:rgb(176,196,222);}
+			#-cat {position:absolute;}
+			#txt, #nosupport {color:rgb(79,59,33);font-family:"Droid Sans","Trebuchet MS",sans-serif;}
+			.menu {position:absolute;text-align:center;background-color:black;color:white;}
+		</style>
+		<script>
+  			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ 			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ 			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  			ga('create', 'UA-41544053-1', 'dropboxusercontent.com');
+			ga('send', 'pageview');
+		</script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	</head>
+	<body id="-body" onload="init()">
+		<p id="nosupport">If you see this message for longer than 10 seconds, your browser is not supported <a href="http://dl.dropboxusercontent.com/u/7105612/BouncyCat/browsers.html">(see the browser support list)</a></p>
+		<script type="text/javascript">
+			var score = 0;
+			function init() {
+				$("#nosupport").hide();
+				cat = $("#-cat");
+				timegiven = $("#tg");
+				text = $("#txt");
+				settings = $("#-settings");
+				pausemenu = $("#-pausemenu");
+				startmenu = $("#-startmenu");
+				body = $("#-body");
+				timer = $("#-timer");
+				highscore = $("#-highscore");
+				scorebox = $("#score");
+				gameover = $("#-gameover");
+				menu = $(".menu");
+                canvas = $("#-canvas");
+				storageSupport = function() {try {return 'localStorage' in window && window['localStorage'] !== null;} catch (e) {alert(e);return false;}}();
+				if (storageSupport) {
+					if (localStorage.backcolor && localStorage.textcolor) {body.css("backgroundColor", localStorage.backcolor); text.css("color", localStorage.textcolor);}
+					if (localStorage.toptime) {toptime = parseInt(localStorage.toptime, 10);} else {toptime = 30;}				
+				}
+				else {
+					toptime = 30;
+					highscore.hide();
+					settings.hide();
+					}
+				if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+					cat.on("touchstart", colorChange);
+				}
+				else {
+					cat.on("click", colorChange)	
+				}
+				gameend = true;
+				//window.onblur = function(){if (gameend != true) {pause();alert("blur")}}
+				timegiven.attr("value", toptime);
+				renderer = setInterval("rendercalc()", 200);
+			}
+			function rendercalc() {
+				var h = document.documentElement.clientHeight;
+				var w = document.documentElement.clientWidth;
+				if (storageSupport) {
+					if (localStorage.highscore) {highscore.text("High score = " + localStorage.highscore);} else {localStorage.highscore = 0;}
+				}
+				cath = Math.round(h*0.15);
+				catw = Math.round(cath * (1483 / 1601));
+				cat.css({height: cath + "px", width: catw + "px"})
+				text.css({display: "block", fontSize: Math.round(h*0.05) + "px", lineHeight: Math.round(h*0.05) + "px"});
+				elHeight = Math.round(h*0.6) + "px";
+				elWidth = Math.round(w*0.6) + "px";
+				elTop = Math.round(h*0.2) + "px";
+				elLeft = Math.round(w*0.2) + "px";
+				menu.css({ height: elHeight, width: elWidth, top: elTop, left: elLeft});
+			}
+			function moveCat() {
+				gameend = false;
+				var h = document.documentElement.clientHeight;
+				var w = document.documentElement.clientWidth;
+				movetoh = Math.floor(Math.random()*h);
+				while (movetoh > h - cath || movetoh < 0) {movetoh = Math.floor(Math.random()*h);}
+				movetow = Math.floor(Math.random()*w);
+				while (movetow > w - catw || movetow < 0) {movetow = Math.floor(Math.random()*w);}
+				cat.css({display: "block", top: movetoh + "px", left: movetow + "px"});
+				time = time + 1;
+				timer.text("Time = " + time);
+				if (time == toptime) {clearInterval(gameStart);gameOver();timer.text("Time = 0");cat.css("display", "none")}
+			}
+			function colorChange() {
+				var r = Math.round(Math.random()*255);
+				var g = Math.round(Math.random()*255);
+				var b = Math.round(Math.random()*255);
+				var tr = 255 - r;
+				var tg = 255 - g;
+				var tb = 255 - b;
+				score = score + 1;
+				body.css("backgroundColor", "rgb(" + r + "," + g + "," + b + ")");
+				text.css("color", "rgb(" + tr + "," + tg + "," + tb + ")");
+				scorebox.text("Score = " + score);
+				if(storageSupport) {if (score > localStorage.highscore) {localStorage.highscore = score;}}
+			}
+			function setColor() {
+				if(storageSupport){
+				localStorage.backcolor = body.css("backgroundColor");
+				localStorage.textcolor = text.css("color");
+				}
+			}
+			function resetColor() {
+				if(storageSupport){
+					localStorage.backcolor = "rgb(176,196,222)";
+					localStorage.textcolor = "rgb(79,59,33)";
+				}
+				init();
+			}
+			function resetScore() {
+				if(storageSupport) {localStorage.highscore = 0;}
+			}
+			function showStart() {
+				startmenu.show();
+			}
+			function showSettings() {
+				settings.show();
+			}
+			function startGame(speed) {
+				toptime = timegiven.attr("value");
+				if (toptime < 61 && toptime > 0) {
+					time = 0; 
+					score = 0;
+					scorebox.text("Score = " + score);
+					gameStart = setInterval(moveCat, speed);
+					startmenu.hide();
+					if(storageSupport){localStorage.toptime = toptime;}
+				}
+				else {alert("Invalid time, please select a number between 1-60");timegiven.attr("value", "30");}
+			}
+			function pause() {
+				try {clearInterval(gameStart)} catch(e) {return;}
+				pausemenu.show();
+				cat.hide();
+			}
+			function unPause() {
+				pausemenu.hide();
+				gameStart = setInterval(moveCat, 1000);
+			}
+			function hideSettings() {
+				settings.hide();
+			}
+			function gameOver() {
+				gameover.show();
+				gameend = true;
+			}
+			function mainMenu() {
+				startmenu.show();
+				gameover.hide();
+			}
+            function hideCanvas() {
+                canvas.hide();
+            }
+		</script>
+		<img src="cat.png" id="-cat" style="display: none;"/>
+		<div id="txt" style="display: none;">
+			<span id="score">Score = 0</span><span onclick="pause()" style="position: absolute;top: 0px;right: 0px;">Pause</span>
+			<p id="-highscore">High score = 0</p>
+			<p id="-timer">Time = 0</p>
+			<div class="menu" id="-startmenu">
+				<p onclick="startGame(1000)">Start game</p>
+				<p>Time given: <input id="tg" type="number" max="60" min="1" size="2"/></p>
+				<p onclick="showSettings()">Show settings</p>
+			</div>
+            <div class="menu" id="-canvas">
+                <p>Canvas appears to be supported in your browser</p>
+                <p>Click <a href="http://dl.dropboxusercontent.com/u/7105612/BouncyCat/bouncycat-canvas/bouncycat.html">here</a> to try the canvas version of BouncyCat</p>
+                <p onclick="hideCanvas()">No thanks</p>
+            </div>
+			<div class="menu" id="-pausemenu" style="display: none;">
+				<p onclick="showSettings()">Show settings</p>
+				<p onclick="unPause()">Resume</p>
+				<p onclick="location.reload()">Restart</p>
+			</div>
+			<div class="menu" id="-gameover" style="display:none;">
+				<p>Game over</p>
+				<p onclick="mainMenu()">Show main menu</p>
+			</div>
+			<div class="menu" id="-settings" style="display: none;">
+				<p onclick="setColor()">Set default color</p>
+				<p onclick="resetColor()">Reset default color</p>
+				<p onclick="resetScore()">Reset high score</p>
+				<p onclick="hideSettings()">Hide settings</p>
+			</div>
+		</div>
+	</body>
+</html>
