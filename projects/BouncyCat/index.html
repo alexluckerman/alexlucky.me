@@ -4,14 +4,14 @@
     <head>
 		<title>BouncyCat v3.1</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-		<meta name="application-name" content="BouncyCat"/> 
-		<meta name="msapplication-TileColor" content="#b0c4de"/> 
+		<!--<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />-->
+		<meta name="application-name" content="BouncyCat"/>
+		<!--<meta name="msapplication-TileColor" content="#b0c4de"/>
 		<meta name="msapplication-TileImage" content="9b67eb89-d874-440f-9665-af865468a787.png"/>
 		<link rel="shortcut icon" href="bouncycat1.ico" />
 		<link rel="apple-touch-icon" href="bouncycat.png" />
-		<link rel="apple-touch-startup-image" href="startup.png" />
+		<link rel="apple-touch-startup-image" href="startup.png" />-->
 		<style type="text/css">
 			#-body {overflow:hidden;background-color:rgb(176,196,222);}
 			#-cat {position:absolute;}
@@ -26,10 +26,10 @@
   			ga('create', 'UA-41544053-1', 'dropboxusercontent.com');
 			ga('send', 'pageview');
 		</script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 	</head>
 	<body id="-body" onload="init()">
-		<p id="nosupport">If you see this message for longer than 10 seconds, your browser is not supported <a href="http://dl.dropboxusercontent.com/u/7105612/BouncyCat/browsers.html">(see the browser support list)</a></p>
+		<!--<p id="nosupport">If you see this message for longer than 10 seconds, your browser is not supported <a href="http://dl.dropboxusercontent.com/u/7105612/BouncyCat/browsers.html">(see the browser support list)</a></p>-->
 		<script type="text/javascript">
 			var score = 0;
 			function init() {
@@ -50,7 +50,7 @@
 				storageSupport = function() {try {return 'localStorage' in window && window['localStorage'] !== null;} catch (e) {alert(e);return false;}}();
 				if (storageSupport) {
 					if (localStorage.backcolor && localStorage.textcolor) {body.css("backgroundColor", localStorage.backcolor); text.css("color", localStorage.textcolor);}
-					if (localStorage.toptime) {toptime = parseInt(localStorage.toptime, 10);} else {toptime = 30;}				
+					if (localStorage.toptime) {toptime = parseInt(localStorage.toptime, 10);} else {toptime = 30;}
 				}
 				else {
 					toptime = 30;
@@ -61,7 +61,7 @@
 					cat.on("touchstart", colorChange);
 				}
 				else {
-					cat.on("click", colorChange)	
+					cat.on("click", colorChange)
 				}
 				gameend = true;
 				//window.onblur = function(){if (gameend != true) {pause();alert("blur")}}
@@ -135,7 +135,7 @@
 			function startGame(speed) {
 				toptime = timegiven.attr("value");
 				if (toptime < 61 && toptime > 0) {
-					time = 0; 
+					time = 0;
 					score = 0;
 					scorebox.text("Score = " + score);
 					gameStart = setInterval(moveCat, speed);
@@ -168,7 +168,7 @@
                 canvas.hide();
             }
 		</script>
-		<img src="cat.png" id="-cat" style="display: none;"/>
+		<img src="https://en.scratch-wiki.info/w/images/ScratchCat-Small.png" id="-cat" style="display: none;"/>
 		<div id="txt" style="display: none;">
 			<span id="score">Score = 0</span><span onclick="pause()" style="position: absolute;top: 0px;right: 0px;">Pause</span>
 			<p id="-highscore">High score = 0</p>
