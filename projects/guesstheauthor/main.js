@@ -1,217 +1,161 @@
-//GroupMe object: takes a client ID and an optional groupId, used to make all calls to the GroupMe API
-function GroupMe(client_id, groupId) {
-    this.auth = new URL(window.location).searchParams.get("access_token");
-        if (typeof this.auth != "string") {
-            window.location = "https://oauth.groupme.com/oauth/authorize?client_id=" + client_id;
-        }
-    this.groupId = groupId;
-    this.authToken = "?token=" + this.auth;
-    this.apiLink = "https://api.groupme.com/v3/";
-    
-    this.makeRequest = function (method, reqtype, params) {
-        var xhr = new XMLHttpRequest();
-        var fullUrl = this.apiLink + reqtype + this.authToken + params;
-        xhr.open(method, fullUrl, false);
-        xhr.send();
-        if (method == "POST") {
-            return xhr.status;
-        }
-        return JSON.parse(xhr.response).response;
-    };
-    
-    this.groupMembers = this.makeRequest("GET", "groups/" + this.groupId, "").members;
-    this.userId = this.makeRequest("GET", "users/me", "").id;
-    this.groupList = this.makeRequest("GET", "groups", "&per_pageomit=members");
-    
-    this.fetchMessages = function (quotebook, earliestMessage, second) {
-        quotebook = typeof quotebook != 'undefined' ? quotebook : [];
-        var loaded = loaded | false;
-        
-        var before = typeof earliestMessage !== 'undefined' ? "&before_id=" + earliestMessage : "";
-        var url = before + "&limit=" + NUM_MESSAGES_PER_REQ;
-        var msgResp = this.makeRequest("GET", "groups/" + this.groupId + "/messages", url);
-        console.log(msgResp);
-        
-        //test if book is updated
-        if (!second && msgResp.count == window.localStorage.getItem("GroupMe_msgCount") && this.groupId.toString() == window.localStorage.getItem("GroupMe_groupId")) {
-                quotebook = JSON.parse(window.localStorage.getItem('GroupMe_currGroupMsgs'));
-                console.log("Updated quote book found!");
-                loaded = true;
-        }
-        
-        //if not, add all messages to quotebook
-        else {
-            var k = quotebook.length;
-            var l = msgResp.messages.length;
-            for(var j = 0; j < l; j++) {
-                console.log(j+k);
-                quotebook[j+k] = msgResp.messages[j];
-            }
-            //i++;
-            earliestMessage = msgResp.messages[l - 1].id;
-            if (l < NUM_MESSAGES_PER_REQ) {
-                loaded = true;
-            }
-        }
-        
-        // evaluate if the quotebook is loaded
-        if (loaded) {
-            window.localStorage.setItem('GroupMe_groupId', this.groupId);
-            window.localStorage.setItem('GroupMe_msgCount', msgResp.count);
-            window.localStorage.setItem('GroupMe_currGroupMsgs', JSON.stringify(quotebook));
-            console.log("All quotes loaded");
-            return quotebook;
-        }
-        else {
-            return this.fetchMessages(quotebook, earliestMessage, true);
-        }
-    }
-    
-    this.likeMessage = function (msg) {
-        return 200 == this.makeRequest("POST", "messages/" + this.groupId + "/" + msg.id + "/like");
-    };
-    this.unlikeMessage = function (msg) {
-        return 200 == this.makeRequest("POST", "messages/" + this.groupId + "/" + msg.id + "/unlike");
-    };
-}
+var groupId = 36691870;
+var url = new URL(window.location);
+var params = url.searchParams;
+var token = params.get("access_token");
+var accessToken = "?token=" + token;
+var apiLink = "https://api.groupme.com/v3/groups";
+var storage, quote, author, poster, reveal, time, currQuote, likes, currQuoteLiked, prog;
 
-//Quote object
-function Quote (quote, user) {
-    this.id = quote.id;
-    this.rawText = quote.text;
-    this.poster = quote.name;
-    this.numLikes = quote.favorited_by.length;
-    this.time = new Date(quote.created_at * 1000).toDateString();
-    if (typeof user != "undefined") {
-        this.liked = false;
-        for (var i = 0; i < this.numLikes; i++) {
-            if (this.id == quote.favorited_by[i])
-            {
-                this.liked = true;
-            }
-        }
-    }
-    this.process = function() {
-        if (this.rawText === null) {
-            return false;
-        }
-        message = this.rawText.split('-');
-        if (message.length == 2 && message[0].length > 0 && this.numLikes >= 2) {
-            this.text = message[0];
-            this.author = message[1];
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-}
+// Show full message support is currently disabled
+//var fullmsg;
 
-//QuoteGenerator object: takes an array of messages, used to generate Quote objects
-function QuoteGenerator(quotebook, user) {
-    this.quotebook = quotebook;
-    this.user = user;
-    this.getQuote = function () {
-        var randMsgNum = Math.floor(Math.random() * this.quotebook.length);
-        var quote = new Quote(quotebook[randMsgNum], this.user);
-        return quote;
-    }
-}
+// Alternate quote format handling is currently disabled
+//var alt = false;
+//var altPoster, altTime, altLikes;
 
-// Begin QuoteGame specific code
-var storage, messagesViewed;
-var NUM_MESSAGES_PER_REQ = 100, NUM_GUESS_OPTIONS = 4;
+var messagesViewed;
+var NUM_MESSAGES_PER_REQ = 100;
+var PROG_AFTER_AUTH = 5;
 
 function init() {
-    
-    storage = window.localStorage;
-    messagesViewed = parseInt(storage.getItem("QuoteGame_msgsViewed")) || 0;
-    var groupId = storage.getItem("QuoteGame_groupId");
-    var gm;
-    if (groupId !== null) {
-        gm = new GroupMe("ZDxIRTOlmsiv6iOwlmLextWonlTK5vGqB6rWI8J2dnJfkiRB", groupId);
-        loadQuotes(gm);
+    if (token === null) {
+        window.location = "https://oauth.groupme.com/oauth/authorize?client_id=ZDxIRTOlmsiv6iOwlmLextWonlTK5vGqB6rWI8J2dnJfkiRB";
+    } else {
+        quote = document.getElementById("quote");
+        author = document.getElementById("author");
+        poster = document.getElementById("poster");
+        reveal = document.getElementById("reveal");
+        time = document.getElementById("time");
+        likes = document.getElementById("likes");
+        prog = document.getElementsByTagName("progress")[0];
+        prog.value = PROG_AFTER_AUTH;
+        /*fullmsg = document.getElementById("fullmsg");
+        altPoster = document.getElementById("altPoster");
+        altTime = document.getElementById("altTime");
+        altLikes = document.getElementById("altLikes");*/
+        storage = window.localStorage;
+        messagesViewed = parseInt(storage.getItem("msgsViewed")) || 0;
+        loadAllQuotes();
+        newQuote();
+        document.onkeypress = function(e) {
+            e = e || window.event;
+            if (e.key == "n") {
+                newQuote();
+            } else if (e.key == "r") {
+                revealAnswer();
+            } /*else if (e.key == "o") {
+                showFullMessage();
+            }*/
+        };
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("app").style.display = "block";
+        window.onunload = function() {
+            storage.setItem("msgsViewed", messagesViewed);
+        };
     }
-    else {
-        gm = new GroupMe("ZDxIRTOlmsiv6iOwlmLextWonlTK5vGqB6rWI8J2dnJfkiRB");
-        displayGroups(gm);
-    }
-}
-
-function displayGroups(gm) {
-    var groups = gm.groupList;
-    var groupDiv = document.getElementById("groups");
-    for(var i = 0; i < groups.length; i++) {
-        var element = document.createElement("p");
-        var textNode = document.createTextNode(groups[i].name);
-        element.appendChild(textNode);
-        element.id = "group" + i;
-        groupDiv.appendChild(element);
-    }
-    groupDiv.addEventListener("click", function(e) {
-            gm.groupId = groups[parseInt(e.target.id.substring(5))].id;
-            storage.setItem("QuoteGame_groupId", gm.groupId);
-            groupDiv.style.display = "none";
-            loadQuotes(gm);
-        });
-    groupDiv.style.display = "block";
-}
-
-function loadQuotes(gm) {
-    var quotebook = gm.fetchMessages();
-    var user = gm.userId;
-    var qg = new QuoteGenerator(quotebook, user);
-    renderQuote(qg);
-    
-    document.onkeypress = function(e) {
-        e = e || window.event;
-        if (e.key == "n") {
-            renderQuote(qg);
-        } else if (e.key == "r") {
-            revealAnswer();
-        } else if (e.key == "g") {
-            displayGroups(gm);
-        } else if (e.key == "v") {
-            console.log(gm);
-            console.log(quotebook);
-            console.log(qg);
-        }
-    };
-    
-    document.getElementById("revealButton").addEventListener("click", revealAnswer);
-    document.getElementById("newQuoteButton").addEventListener("click", function (qg) { renderQuote(qg); });
-    
-    document.getElementById("app").style.display = "block";
-    window.onunload = function() {
-        window.localStorage.setItem("QuoteGame_msgsViewed", messagesViewed);
-    };
 }
 
 function revealAnswer() {
-    document.getElementById("reveal").style.display = "inline";
+    //if(!alt) {
+    reveal.style.display = "inline";
+    /*}
+    else {
+      altReveal.style.display = "inline";
+    }*/
 }
 
-function renderQuote(qg) {
-    var message = qg.getQuote();
-    while (!message.process()) {
-        message = qg.getQuote();
+var quoteBook = [];
+
+function loadAllQuotes() {
+    // request a new batch of NUM_MESSAGES_PER_REQ messages from selected group
+    // add them to the quotebook
+    // while there are still messages to be loaded, continue
+    var earliestMessage;
+    var numBooks = 1;
+    var i, msgResp;
+    for (i = 1; i <= numBooks; i++) { //&& i < 100; i++) {
+        var msgReq = new XMLHttpRequest();
+        var before = "";
+        if (earliestMessage !== undefined) {
+            before = "&before_id=" + earliestMessage;
+        }
+        msgReq.open("GET", apiLink + "/" + groupId + "/messages" + accessToken + before + "&limit=" + NUM_MESSAGES_PER_REQ, false);
+        msgReq.send();
+        msgResp = JSON.parse(msgReq.response).response;
+        console.log(msgResp);
+        if (i == 1) {
+            if (msgResp.count == storage.getItem("count")) {
+                quoteBook = JSON.parse(storage.getItem('quoteBook'));
+                console.log("Updated quote book found!");
+                prog.value = 100;
+                break;
+            }
+            numBooks = Math.ceil(msgResp.count / NUM_MESSAGES_PER_REQ);
+            console.log(numBooks);
+        }
+        prog.value +=  (100 - PROG_AFTER_AUTH) / numBooks;
+        var j, k = quoteBook.length, l = msgResp.messages.length;
+        console.log("Iteration " + i + ", quoteBook.length=" + k);
+        for(j = 0; j < l; j++) {
+            console.log(j+k);
+            quoteBook[j+k] = msgResp.messages[j];
+        }
+        //quoteBook[i] = msgResp.messages;
+        earliestMessage = msgResp.messages[l - 1].id;
     }
-    
-    var quote = document.getElementById("quote");
-    var author = document.getElementById("author");
-    var poster = document.getElementById("poster");
-    var reveal = document.getElementById("reveal");
-    var time = document.getElementById("time");
-    var likes = document.getElementById("likes");
-    
-    reveal.style.display = "none";
-    quote.innerHTML = message.text;
-    author.innerHTML = message.author;
-    poster.innerHTML = message.poster;
-    time.innerHTML = message.time;
-    likes.innerHTML = message.numLikes;
-    messagesViewed++;
+    prog.value = 100;
+    storage.setItem('count', msgResp.count);
+    storage.setItem('quoteBook', JSON.stringify(quoteBook));
+    console.log("All quotes loaded");
 }
+
+function newQuote() {
+    //fullmsg.innerHTML = "";
+    
+    var randMsgNum = Math.floor(Math.random() * quoteBook.length);
+    console.log(randMsgNum);
+    //var randBookNum = Math.floor(Math.random() * quoteBook.length);
+    //var randBook = quoteBook[randBookNum];
+    //console.log(randBook);
+    //if (randBook !== null) {
+        //var randMsgNum = Math.floor(Math.random() * randBook.length);
+        //var randMsg = randBook[randMsgNum];
+        var randMsg = quoteBook[randMsgNum];
+        console.log(randMsg);
+        currQuote = randMsg.text;
+        if (randMsg.text === null) {
+            currQuote = "";
+        }
+        var message = currQuote.split("-");
+        reveal.style.display = "none";
+        //altReveal.style.display = "none";
+        var postTime = new Date(randMsg.created_at * 1000).toDateString();
+        var numLikes = randMsg.favorited_by.length;
+        //curQuoteLike =
+        if (message.length == 2 && message[0].length > 0 && numLikes >= 2) {
+            //alt = false;
+            quote.innerHTML = message[0];
+            author.innerHTML = message[1];
+            poster.innerHTML = randMsg.name;
+            time.innerHTML = postTime;
+            likes.innerHTML = numLikes;
+            messagesViewed++;
+        } else {
+            /*alt = true;
+            quote.innerHTML = currQuote;
+            altPoster.innerHTML = randMsg.name;
+            altTime.innerHTML = postTime;
+            altLikes.innerHTML = numLikes*/
+            newQuote();
+        }
+    /*} else {
+        newQuote();
+    }*/
+}
+
+/*function showFullMessage() {
+    fullmsg.innerHTML = "Full quote: " + currQuote;
+}*/
 
 function toggleLike() {
     if (curQuoteLiked === true) {

@@ -22,12 +22,8 @@ span {
   font-weight: bold;
 }
 
-#reveal {
+#reveal #app {
   display: none;
-}
-
-#group {
-    display: none;
 }
 
 footer {
