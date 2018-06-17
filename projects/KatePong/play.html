@@ -9,6 +9,14 @@
 <link rel="apple-touch-icon" href="facepong.png" />
 <link rel="apple-touch-startup-image" href="startup.png">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-41544053-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-41544053-2');
+</script>
 <script>
 // Definitions
 //var h, w, pongw, pongh, pongl, ballw, ballt, balll, bspeed, redge, rpedge, wtop, wbottom, psect, pleftb, pleftt, pmiddleb, pmiddlet, prightb, prightt, topleft, topright, bottomleft, bottomright, pong1, pong2, ball, cpos1, cpos2, bposl, bpost, dir;
@@ -36,8 +44,8 @@ pleftt = psect - 1;
 pmiddleb = (-1 * psect) + psect + 1;
 pmiddlet = (2 * psect) - 1;
 prightb =(-1 * psect) + (2 * psect) + 1;
-prightt = (3 * psect) - 1; 
-click = $(".click");		
+prightt = (3 * psect) - 1;
+click = $(".click");
 topleft = $("#topleft");
 topright = $("#topright");
 bottomleft = $("#bottomleft");
@@ -65,13 +73,13 @@ if (('ontouchstart' in window) || window.DocumentTouch && document instanceof Do
 topleft.on("touchstart", function() {cpos2 = cpos2 - pongm;pong1.css("left", cpos2 + 'px');});
 topright.on("touchstart", function() {cpos2 = cpos2 + pongm;pong1.css("left", cpos2 + 'px');});
 bottomleft.on("touchstart", function() {cpos1 = cpos1 - pongm;pong2.css("left", cpos1 + 'px');});
-bottomright.on("touchstart", function() {cpos1 = cpos1 + pongm;pong2.css("left", cpos1 + 'px');});	
+bottomright.on("touchstart", function() {cpos1 = cpos1 + pongm;pong2.css("left", cpos1 + 'px');});
 }
 else {
 topleft.on("click", function() {cpos2 = cpos2 - pongm;pong1.css("left", cpos2 + 'px');});
 topright.on("click", function() {cpos2 = cpos2 + pongm;pong1.css("left", cpos2 + 'px');});
 bottomleft.on("click", function() {cpos1 = cpos1 - pongm;pong2.css("left", cpos1 + 'px');});
-bottomright.on("click", function() {cpos1 = cpos1 + pongm;pong2.css("left", cpos1 + 'px');});	
+bottomright.on("click", function() {cpos1 = cpos1 + pongm;pong2.css("left", cpos1 + 'px');});
 }
 //setInterval(renderCalc,200);
 });
@@ -195,7 +203,7 @@ dir = 4;
 break;
 case "bl":
 if (dir == 4) {
-dir = 6; 
+dir = 6;
 }
 if (dir == 5) {
 dir = 8;
@@ -206,7 +214,7 @@ dir = 8;
 break;
 case "bm":
 if (dir == 6) {
-dir = 8; 
+dir = 8;
 }
 if (dir == 5) {
 dir = 1;
@@ -217,7 +225,7 @@ dir = 2;
 break;
 case "br":
 if (dir == 4) {
-dir = 2; 
+dir = 2;
 }
 if (dir == 5) {
 dir = 2;
@@ -228,7 +236,7 @@ dir = 8;
 break;
 case "tl":
 if (dir == 2) {
-dir = 4; 
+dir = 4;
 }
 if (dir == 1) {
 dir = 6;
@@ -250,7 +258,7 @@ dir = 6;
 break;
 case "tr":
 if (dir == 2) {
-dir = 4; 
+dir = 4;
 }
 if (dir == 1) {
 dir = 4;
@@ -281,7 +289,7 @@ bottom:5px;
 position:fixed;
 }
 .click {
-position:absolute;	
+position:absolute;
 }
 </style>
 </head>

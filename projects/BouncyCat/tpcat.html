@@ -1,6 +1,14 @@
 <html>
   <head>
     <title>it's a cat... that teleports. teleportcat?</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-41544053-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-41544053-2');
+    </script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script>
       var score;
@@ -23,9 +31,9 @@
 	gameover = true;
       });
       function scoreUp() {
-        if(active) { 
+        if(active) {
 	  score++;
-          sb.text(score); 
+          sb.text(score);
 	}
       }
       function moveCat() {
@@ -54,14 +62,14 @@
         tb.text(time);
 	}
       }
-      function start() { 
+      function start() {
 	if(gameover) {
           score = 0;
           mc = setInterval(moveCat, parseInt(spd.val()) * 100);
           time = 30;
           timer = setInterval(timing, 1000);
 	  active = true;
-	}	
+	}
       }
       function pauseToggle() {
        if(active) {
@@ -98,7 +106,7 @@
       #settings {
         display: none;
       }
-    </style>  
+    </style>
   </head>
   <body>
     <img src='cat.jpg' id='catimg'/>
