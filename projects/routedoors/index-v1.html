@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RunRoute</title>
+        <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+    #header {
+        height: 79%;
+        border-bottom: black 1%;
+    }
+    #map {
+        height: 20%;
+    }
+    </style>
+    </head>
+    <body>
+        <div id="header">
+            <span>Origin</span><input type="text" id="origin"/>
+            <span>Distance</span><input type="text" id="dist"/>
+            <div id="mapUrl"></div>
+        </div>
+        <div id="map"></div>
+    </body>
+    <script>
+        var map;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 8
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1lXDgX__CweCoIZ1HrpKQqtrviMse6TQ&callback=initMap"
+    async defer></script>
+</html>
