@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css?family=Arvo');
+
+        #load {
+            margin: auto;
+            font-size: 10vw;
+            font-family: Arvo, serif;
+            color: #006400;
+        }
+        #header {
+            font-family: sans-serif;
+            display: flex;
+            height: 15%;
+        }
+        img, input, button, span, #mapUrl {
+            margin: auto;
+            /*height: 100%;*/
+        }
+        #map {
+            height: 85%;
+        }
+
+        #tree {
+            width: 20%;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        #loading {
+            overflow: hidden;
+            height: 100%;
+            animation: logo-flash 2s linear 0s infinite alternate;
+        }
+
+        @keyframes logo-flash {
+            from {
+                opacity: 1.0;
+            }
+            to {
+                opacity: 0.25;
+            }
+        }
