@@ -1,6 +1,5 @@
 var map, dirDisplay, dirService, geocoder, pos, resp;
-          var webEndpoint = "https://us-east1-hackgt-1539999794975.cloudfunctions.net/point_generator";
-          //"https://us-central1-long-base-219018.cloudfunctions.net/point_generator_og";
+          var webEndpoint = "https://us-central1-maps-react-220002.cloudfunctions.net/routedoors_handler";
           
           // Initializes the map, called by the Google Maps API script once it has loaded
           function initMap() {
@@ -57,8 +56,10 @@ var map, dirDisplay, dirService, geocoder, pos, resp;
               toggleLoading();
               fetch(new Request(reqParams, {method: "POST"}))
               .then((response) => {
-                  toggleLoading();
-                  return response.json();
+                  if(!response.ok) {
+                    throw response;
+                  }
+                return response.json();
               }).then((resp) => {
               console.log(resp);
               // Takes the returned link to Google Maps and displays it in the header
@@ -96,5 +97,10 @@ var map, dirDisplay, dirService, geocoder, pos, resp;
                   console.log("Directions request failed: " + status);
                 }
               });
+              toggleLoading();
+          }).catch((err) => {
+              alert("An error occured. Please try again later");
+              toggleLoading();
+              console.log(err);
           });
         }
