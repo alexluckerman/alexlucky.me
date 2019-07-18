@@ -7,14 +7,15 @@
     <link rel="stylesheet" href="main.css"/>
     </head>
     <body>
-        <div id="loading" style="display: none"><img id="tree" src="logo.png"/><p id="load">ROUTEDOORS</p></div>
+        <div class="loading hidden"><img id="tree" src="logo.png"/><p class="loadingText">ROUTEDOORS</p></div>
         <div id="header">
-            <span>Origin</span><input type="text" id="origin"/><button onclick="findLocHandler()">Get current location</button>
-            <span>Distance (mi)</span><input type="text" id="dist"/><button onclick="getRoutes()">Generate route</button>
-            <div id="mapUrl"></div>
+            <span>Origin</span><input type="text" id="origin"/><button id="locationButton">Get current location</button>
+            <span>Distance (mi)</span><input type="text" id="dist"/><button id="routingButton">Generate route</button>
+            <a id="mapUrl" href="" target="_blank">Open route in Google Maps</a>
         </div>
         <div id="map"></div>
-      <script src="main.js"></script>
-      <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1lXDgX__CweCoIZ1HrpKQqtrviMse6TQ&callback=initMap"></script>
+        <script src="main.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1lXDgX__CweCoIZ1HrpKQqtrviMse6TQ&callback=initMap"></script><!-- AIzaSyD1lXDgX__CweCoIZ1HrpKQqtrviMse6TQ -->
     </body>
 </html>
