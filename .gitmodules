@@ -1,0 +1,6 @@
+[submodule "projects/cdt"]
+	path = projects/cdt
+	url = git@github.com:alexluckerman/chinese-diction-tournament
+[submodule "projects/routedoors"]
+	path = projects/routedoors
+	url = git@github.com:alexluckerman/routedoors
